@@ -6,24 +6,23 @@
     function drawSeriesChart() {
 
       var data = google.visualization.arrayToDataTable([
-        ['ID', 'Life Expectancy', 'Fertility Rate', 'Region',     'Population'],
-        ['CAN',    80.66,              1.67,      'North America',  33739900],
-        ['DEU',    79.84,              1.36,      'Europe',         81902307],
-        ['DNK',    78.6,               1.84,      'Europe',         5523095],
-        ['EGY',    72.73,              2.78,      'Middle East',    79716203],
-        ['GBR',    80.05,              2,         'Europe',         61801570],
-        ['IRN',    72.49,              1.7,       'Middle East',    73137148],
-        ['IRQ',    68.09,              4.77,      'Middle East',    31090763],
-        ['ISR',    81.55,              2.96,      'Middle East',    7485600],
-        ['RUS',    68.6,               1.54,      'Europe',         141850000],
-        ['USA',    78.09,              2.05,      'North America',  307007000]
+        ["ID",      "Date",     "", "", "Enrollment"],
+        ["1887-88", 1887,       0,  510,  510],
+        ["1888-89", 1888,       0,  454,  454],
+        ["1889-90", 1889,       0,  798,  798],
+        ["1890-91", 1890,       0,  711,  711],
+        ["1891-92", 1891,       0,  721,  721],
+        ["1892-93", 1892,       0,  736,  736],
+        ["1893-94", 1893,       0,  753,  753],
       ]);
+
+      
 
       var options = {
         title: 'Correlation between life expectancy, fertility rate ' +
                'and population of some world countries (2010)',
-        hAxis: {title: 'Life Expectancy'},
-		vAxis: {title: 'Fertility Rate'},
+        hAxis: {title: 'Date'},
+		    vAxis: {title: ''},
         bubble: {textStyle: {fontSize: 11}}
       };
 
