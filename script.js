@@ -77,11 +77,7 @@
     var chart = new google.visualization.BubbleChart(document.getElementById('series_chart_div'));
       chart.draw(data, options);
     }
-<<<<<<< HEAD
     
 	window.addEventListener("load", drawSeriesChart);
-=======
-      
-  	//window.addEventListener("load",init);
->>>>>>> 785356ce300fdb88df470fa001fe77d492b39623
+
 }());
