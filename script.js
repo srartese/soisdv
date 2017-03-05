@@ -11,42 +11,34 @@
   google.charts.setOnLoadCallback(drawSeriesChart);
 
   function drawSeriesChart() {
-    
-  	// var data = new google.visualization.arrayToDataTable([
-   //      ["ID", "Date", "", "", "Enrollment"],
-   //      ["Test 2000", 2000, 0, 600, 600],
-   //      ["Test 2001", 2001, 0, 1200, 1200],
-   //      ["Test 2002", 2002, 0, 2400, 2400],
-   //      ["Test 2003", 2003, 0, 4800, 4800],
-   //      ["Test 2004", 2004, 0, 9600, 9600],
-   //      ["Test 2000", 2005, 0, 600, 600],
-   //      ["Test 2001", 2006, 0, 1200, 1200],
-   //      ["Test 2002", 2007, 0, 2400, 2400],
-   //      ["Test 2003", 2008, 0, 4800, 4800],
-   //      ["Test 2004", 2009, 0, 9600, 9600],
-   //      ["Test 2000", 2010, 0, 600, 600],
-   //      ["Test 2001", 2011, 0, 1200, 1200],
-   //      ["Test 2002", 2012, 0, 2400, 2400],
-   //      ["Test 2003", 2013, 0, 4800, 4800],
-   //      ["Test 2004", 2014, 0, 9600, 9600],
-   //      ["Test 2000", 2015, 0, 600, 600],
-   //      ["Test 2001", 2016, 0, 1200, 1200],
-   //      ["Test 2002", 2017, 0, 2400, 2400],
-   //      ["Test 2003", 2018, 0, 4800, 4800],
-   //      ["Test 2004", 2019, 0, 9600, 9600],
-   //      ["Test 2000", 2020, 0, 600, 600],
-   //      ["Test 2001", 2021, 0, 1200, 1200],
-   //      ["Test 2002", 2022, 0, 2400, 2400],
-   //      ["Test 2003", 2023, 0, 4800, 4800],
-   //      ["Test 2004", 2024, 0, 9600, 9600],
-   //      ["Test 2000", 2025, 0, 600, 600],
-   //      ["Test 2001", 2026, 0, 1200, 1200],
-   //      ["Test 2002", 2027, 0, 2400, 2400],
-   //      ["Test 2003", 2028, 0, 4800, 4800],
-   //      ["Test 2004", 2029, 0, 9600, 9600],
-   //    ]);
 
-    var data = new google.visualization.arrayToDataTable(SIOSdata);
+    var weightedSOISdata = [
+      ["ID", "Date", "", "", "Enrollment"],
+    ];
+    var totalEnrollment = 0.0;
+    for(var i = 1; i < SOISdata.length; i++){
+      var d = SOISdata[i];
+      totalEnrollment += d[3]/2.08;
+      weightedSOISdata.push([
+        d[0].slice(0,4), totalEnrollment, d[2], d[3], d[4]*d[4]
+      ]);
+      totalEnrollment += d[3]/2.08;
+    }
+
+    var data = new google.visualization.arrayToDataTable(weightedSOISdata);
+
+    /*var testSOISdata = [
+      ["ID", "Date", "", "", "Enrollment"],
+      ["1", 324, 0, 600, 360000],
+      ["2", 1296, 0, 1200, 1440000],
+      ["3", 3240, 0, 2400, 5760000],
+      ["4", 7128, 0, 4800, 23040000],
+      ["5", 14912, 0, 9600, 92160000],
+      ["6", 22688, 0, 4800, 23040000]
+    ];
+    var totalEnrollment = 0;*/
+
+    //var data = new google.visualization.arrayToDataTable(testSOISdata);
   	
     // Opaque until on hover ?
 
@@ -55,30 +47,27 @@
       hAxis: {
         title: '', 
         format: '', 
-        gridlines: {
-          count: 0,
-        },
+        gridlines: {count: 0},
         viewWindowMode:'explicit',
         viewWindow:{
-          max:1896,
-          min:1884
+          max:21000,
+          min:0
         }
       },
       vAxis: {
         title: '',
         format: '',
-        gridlines: {
-          count: 0
-        }
+        gridlines: {count: 0},
       },
       bubble: {textStyle: {fontSize: 11}},
-      colorAxis: {colors:['#FF3333','#8133FF']},
-      sizeAxis: {minValue: 0, maxSize: 70},
+      colorAxis: {colors:['#FFFF00','#FF0000']},
+      sizeAxis: {minValue: 0, maxSize: 100},
       explorer:{
         axis: 'horizontal',
         maxZoomIn: 1,
         maxZoomOut: 1
-      }
+      },
+      tooltip: {trigger: 'none'}
     };
 
     var chart = new google.visualization.BubbleChart(document.getElementById('series_chart_div'));
