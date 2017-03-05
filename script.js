@@ -6,15 +6,9 @@
 
 (function(){
  	"use strict";
- 	
- 	google.charts.load('current', {'packages':['corechart']});
-    google.charts.setOnLoadCallback(drawSeriesChart);
-
-    function drawSeriesChart() {
-	
-    var jsonData = "SIOSdata.json";
-    
-	var data = new google.visualization.DataTable(jsonData);
+ 	    function drawSeriesChart() {	
+	    
+	    var data = new google.visualization.DataTable(json);
 	
       // Opaque until on hover ?
 
@@ -31,5 +25,5 @@
       chart.draw(data, options);
     }
     
-	//window.addEventListener("load",init);
+	window.addEventListener("load", drawSeriesChart);
 }());
