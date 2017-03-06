@@ -24,6 +24,12 @@ strong {	font-weight:bold;}
 abbr {		border-bottom: 1px dotted #535353; cursor:help; font-style:italic;}
 
 
+.boxes {	text-align: center; margin: 15px auto; height: 30px; width: 500px; }
+.boxes ul li {list-style-type: none; display: inline-block; margin: 0 25px;}
+input[type="radio" i]{background-color: red !important;}
+
+.bttn { text-align: center; margin: 0 auto; }
+button {	background-color: rgb(89, 155, 179); border-radius: 28px; border: 1px solid rgb(41, 102, 143); display: inline-block; cursor: pointer; color: rgb(255, 255, 255); font-family: Arial; font-size: 17px; padding: 10px 20px; text-decoration: none; text-shadow: rgb(61, 118, 138) 0px 1px 0px; margin: 0 20px;}
 
 
-#series_chart_div {width: 900px; height: 500px; margin: 0 auto;}
+#series_chart_div {		width: 900px; height: 500px; margin: 0 auto;}

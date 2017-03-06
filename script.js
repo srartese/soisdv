@@ -10,7 +10,7 @@
   google.charts.load('current', {'packages':['corechart']});
   google.charts.setOnLoadCallback(init);
 
-  var data, options, chart, parabolaBtn, chartState;
+  var data, options, chart, curveBtn, chartState, timelineBnt;
 
   function init(){
 	 //Radio buttons!
@@ -25,10 +25,15 @@
   	}
   	
   	
-  	parabolaBtn = document.getElementById('parabolaBtn');
-    parabolaBtn.onclick = function(){
-      drawParabolaChart();
+  	curveBtn = document.getElementById('curveBtn');
+    curveBtn.onclick = function(){
+      drawCurveChart();
     };
+    timelineBnt = document.getElementById('timelineBtn');
+    timelineBtn.onclick = function(){
+      drawSeriesChart();
+    };
+
 
 	chartState = "series";
 	chart = new google.visualization.BubbleChart(document.getElementById('series_chart_div'));
@@ -90,25 +95,25 @@
     chart.draw(data, options);
   }
   
-  function drawParabolaChart(){
+  function drawCurveChart(){
     // Disabling the button while the chart is drawing.
-    parabolaBtn.disabled = true;
+    curveBtn.disabled = true;
     google.visualization.events.addListener(chart, 'ready',
       function() {
-        parabolaBtn.disabled = false;
+        curveBtn.disabled = false;
       });
     
-    var parabolaSOISdata = [
+    var curveSOISdata = [
       ["ID", "Year", "Enrollment", "Size"]
     ];
     for(var i = 1; i < SOISdata.length; i++){
       var d = SOISdata[i];
-      parabolaSOISdata.push([
+      curveSOISdata.push([
         d[0].slice(0,4), d[1], d[3], d[3]
       ]);
     }
 
-    data = new google.visualization.arrayToDataTable(parabolaSOISdata);
+    data = new google.visualization.arrayToDataTable(curveSOISdata);
 
     options.hAxis.gridlines = 14;
     options.hAxis.minorGridlines = 9;
