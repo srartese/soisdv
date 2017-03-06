@@ -152,7 +152,7 @@
         fivesEnrollment += d[3];
         if((i-1) % 5 == 0 && i != 1){
           fiveSOISdata.push([
-            SOISdata[i-5][0].slice(0,4), (totalEnrollment+(fivesEnrollment/2.08)), 0, d[3], fives
+            SOISdata[i-5][0].slice(0,4), (totalEnrollment+(fivesEnrollment/2.08)), 0, fivesEnrollment, fives
           ]);
           fives = 0;
           totalEnrollment += fivesEnrollment;
@@ -160,41 +160,88 @@
         }
       }
 
-      options.hAxis.viewWindow.max = 98000//{
-      //   max: 11000,
-      //   min: 0
-      // }
+      options.hAxis.viewWindow.max = 98000
     }
     else if(chartState == "curve"){
+      var fives = 0;
       fiveSOISdata.push(["ID", "Year", "Enrollment", "Size"]);
       for(var i = 1; i < SOISdata.length; i++){
         var d = SOISdata[i];
-        fiveSOISdata.push([
-          d[0].slice(0,4), totalEnrollment, d[2], d[3], d[4]*d[4]
-        ]);
+        fives += d[3]
+        if((i-1) % 5 == 0 && i != 1){
+          fiveSOISdata.push([
+            SOISdata[i-5][0].slice(0,4), SOISdata[i-5][1], fives, fives
+          ]);
+          fives = 0
+        }
       }
-    }
 
+      options.vAxis.viewWindow.max = 38000;
+      options.sizeAxis.maxSize = 6;
+    }
 
     data = new google.visualization.arrayToDataTable(fiveSOISdata);
     chart.draw(data, options);
   }
   
   function filterByTen(){
-	  	var fiveSOISdata = [
-      ["ID", "Date", "", "", "Enrollment"],
-    ];
-    var totalEnrollment = 0.0;
-    for(var i = 6; i < SOISdata.length; i =i+ 10){
-      var d = SOISdata[i];
-      totalEnrollment += d[3]/2.08;
-      fiveSOISdata.push([
-        d[0].slice(0,4), totalEnrollment, d[2], d[3], d[4]*d[4]
-      ]);
-      totalEnrollment += d[3]/2.08;
+
+    var tenSOISdata = [];
+    if(chartState == "series"){
+      tenSOISdata.push(["ID", "Date", "", "", "Enrollment"]);
+      var totalEnrollment = 0;
+      var tens = 0;
+      var tensEnrollment = 0;
+
+      for(var i = 6; i < SOISdata.length; i++){
+        var d = SOISdata[i];
+        tens += d[4]*d[4]
+        tensEnrollment += d[3];
+        if((i-6) % 10 == 0 && i != 6){
+          tenSOISdata.push([
+            SOISdata[i-10][0].slice(0,4), (totalEnrollment+(tensEnrollment/2.08)), 0, tensEnrollment, tens
+          ]);
+          tens = 0;
+          totalEnrollment += tensEnrollment;
+          tensEnrollment = 0;
+        }
+      }
+
+      options.hAxis.viewWindow.max = 180000
     }
+    else if(chartState == "curve"){
+      var tens = 0;
+      tenSOISdata.push(["ID", "Year", "Enrollment", "Size"]);
+      for(var i = 1; i < SOISdata.length; i++){
+        var d = SOISdata[i];
+        tens += d[3]
+        if((i-6) % 10 == 0 && i != 6){
+          tenSOISdata.push([
+            SOISdata[i-10][0].slice(0,4), SOISdata[i-10][1], tens, tens
+          ]);
+          tens = 0;
+        }
+      }
+
+      options.vAxis.viewWindow.max = 70000;
+      options.vAxis.gridlines = {count: 6}
+      options.sizeAxis.maxSize = 13;
+    }
+
+	  	// var fiveSOISdata = [
+    //   ["ID", "Date", "", "", "Enrollment"],
+    // ];
+    // var totalEnrollment = 0.0;
+    // for(var i = 6; i < SOISdata.length; i =i+ 10){
+    //   var d = SOISdata[i];
+    //   totalEnrollment += d[3]/2.08;
+    //   fiveSOISdata.push([
+    //     d[0].slice(0,4), totalEnrollment, d[2], d[3], d[4]*d[4]
+    //   ]);
+    //   totalEnrollment += d[3]/2.08;
+    // }
     
-     data = new google.visualization.arrayToDataTable(fiveSOISdata);
+     data = new google.visualization.arrayToDataTable(tenSOISdata);
      chart.draw(data, options);
   }
   
