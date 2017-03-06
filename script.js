@@ -1,12 +1,11 @@
 /* SOIS Data Visualization using Google Charts
 	By Matthew Graham and Sara Artese
-	Last Updated: March 4, 2017
+	Last Updated: March 5, 2017
 */
 
 
 (function(){
  	"use strict";
- 	var byFive = false;
  	
  google.charts.load('current', {'packages':['corechart']});
   google.charts.setOnLoadCallback(drawSeriesChart);
@@ -15,12 +14,17 @@
 
   function drawSeriesChart() {
     
-  	document.querySelector('#fiveCheckbox').onchange = function(e){
-  		byFive = e.target.checked;
+    document.querySelector('#allRadio').onchange = function(e){
+  		drawSeriesChart();
+  	}
+  	document.querySelector('#fiveRadio').onchange = function(e){
   		filterByFive();
   	}
-  	console.log(byFive);
+  	document.querySelector('#tenRadio').onchange = function(e){
+  		filterByTen();
+  	}
 
+  	
     parabolaBtn = document.getElementById('parabolaBtn');
     parabolaBtn.onclick = function(){
       drawParabolaChart();
@@ -145,7 +149,7 @@
       ["ID", "Date", "", "", "Enrollment"],
     ];
     var totalEnrollment = 0.0;
-    for(var i = 1; i < SOISdata.length; i =i+ 10){
+    for(var i = 1; i < SOISdata.length; i =i+ 5){
       var d = SOISdata[i];
       totalEnrollment += d[3]/2.08;
       fiveSOISdata.push([
@@ -153,8 +157,27 @@
       ]);
       totalEnrollment += d[3]/2.08;
     }
-
-    var data = new google.visualization.arrayToDataTable(fiveSOISdata);
+    
+     data = new google.visualization.arrayToDataTable(fiveSOISdata);
+     chart.draw(data, options);
+  }
+  
+  function filterByTen(){
+	  	var fiveSOISdata = [
+      ["ID", "Date", "", "", "Enrollment"],
+    ];
+    var totalEnrollment = 0.0;
+    for(var i = 6; i < SOISdata.length; i =i+ 10){
+      var d = SOISdata[i];
+      totalEnrollment += d[3]/2.08;
+      fiveSOISdata.push([
+        d[0].slice(0,4), totalEnrollment, d[2], d[3], d[4]*d[4]
+      ]);
+      totalEnrollment += d[3]/2.08;
+    }
+    
+     data = new google.visualization.arrayToDataTable(fiveSOISdata);
+     chart.draw(data, options);
   }
   
   window.addEventListener("load", drawSeriesChart);
