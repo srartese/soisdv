@@ -11,6 +11,8 @@
  google.charts.load('current', {'packages':['corechart']});
   google.charts.setOnLoadCallback(drawSeriesChart);
 
+  var data, options, chart, parabolaBtn;
+
   function drawSeriesChart() {
     
   	document.querySelector('#fiveCheckbox').onchange = function(e){
@@ -19,7 +21,7 @@
   	}
   	console.log(byFive);
 
-    var parabolaBtn = document.getElementById('parabolaBtn');
+    parabolaBtn = document.getElementById('parabolaBtn');
     parabolaBtn.onclick = function(){
       drawParabolaChart();
     };
@@ -37,11 +39,11 @@
       totalEnrollment += d[3]/2.08;
     }
 
-    var data = new google.visualization.arrayToDataTable(weightedSOISdata);
+    data = new google.visualization.arrayToDataTable(weightedSOISdata);
 
     // Opaque until on hover ?
 
-    var options = {
+    options = {
       title: 'RIT School of Individualized Studies Enrollment from 1885-2017',
       hAxis: {
         title: '', 
@@ -74,12 +76,11 @@
       tooltip: {trigger: 'none'}
     };
 
-    var chart = new google.visualization.BubbleChart(document.getElementById('series_chart_div'));
+    chart = new google.visualization.BubbleChart(document.getElementById('series_chart_div'));
     chart.draw(data, options);
   }
   
   function drawParabolaChart(){
-    var chart = new google.visualization.BubbleChart(document.getElementById('series_chart_div'));
     // Disabling the button while the chart is drawing.
     parabolaBtn.disabled = true;
     google.visualization.events.addListener(chart, 'ready',
@@ -97,9 +98,7 @@
       ]);
     }
 
-    var data = new google.visualization.arrayToDataTable(parabolaSOISdata);
-
-    var options = {
+    options = {
       title: 'RIT School of Individualized Studies Enrollment from 1885-2017',
       hAxis: {
         title: '', 
