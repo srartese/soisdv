@@ -12,6 +12,7 @@
 
   var data, options, chart, curveBtn, chartState, timelineBnt;
 
+
   function init(){
 	 //Radio buttons!
 	document.querySelector('#allRadio').onchange = function(e){
@@ -35,15 +36,16 @@
     };
 
 
-	chartState = "series";
-	chart = new google.visualization.BubbleChart(document.getElementById('series_chart_div'));
-    	
-	drawSeriesChart();
+  	chartState = "series";
+  	chart = new google.visualization.BubbleChart(document.getElementById('series_chart_div'));
+      	
+  	drawSeriesChart();
 	  
   }
 
   function drawSeriesChart() {
-   var weightedSOISdata = [
+    chartState = "series";
+    var weightedSOISdata = [
       ["ID", "Date", "", "", "Enrollment"],
     ];
     var totalEnrollment = 0.0;
@@ -96,6 +98,7 @@
   }
   
   function drawCurveChart(){
+    chartState = "curve";
     // Disabling the button while the chart is drawing.
     curveBtn.disabled = true;
     google.visualization.events.addListener(chart, 'ready',
@@ -127,29 +130,54 @@
       min:0
     };
     options.sizeAxis.maxSize = 5;
-    options.explorer.maxZoomIn = .1
+    options.explorer.maxZoomIn = .1;
     options.explorer.maxZoomOut = 1;
     options.explorer.zoomDelta = 1.1;
+    options.tooltip.trigger = 'hover';
 
     chart.draw(data, options);
   }
   
   function filterByFive(){
-	var fiveSOISdata = [
-      ["ID", "Date", "", "", "Enrollment"],
-    ];
-    var totalEnrollment = 0.0;
-    for(var i = 1; i < SOISdata.length; i =i+ 5){
-      var d = SOISdata[i];
-      totalEnrollment += d[3]/2.08;
-      fiveSOISdata.push([
-        d[0].slice(0,4), totalEnrollment, d[2], d[3], d[4]*d[4]
-      ]);
-      totalEnrollment += d[3]/2.08;
+    var fiveSOISdata = [];
+    if(chartState == "series"){
+      fiveSOISdata.push(["ID", "Date", "", "", "Enrollment"]);
+      var totalEnrollment = 0;
+      var fives = 0;
+      var fivesEnrollment = 0;
+
+      for(var i = 1; i < SOISdata.length; i++){
+        var d = SOISdata[i];
+        fives += d[4]*d[4]
+        fivesEnrollment += d[3];
+        if((i-1) % 5 == 0 && i != 1){
+          fiveSOISdata.push([
+            SOISdata[i-5][0].slice(0,4), (totalEnrollment+(fivesEnrollment/2.08)), 0, d[3], fives
+          ]);
+          fives = 0;
+          totalEnrollment += fivesEnrollment;
+          fivesEnrollment = 0;
+        }
+      }
+
+      options.hAxis.viewWindow.max = 98000//{
+      //   max: 11000,
+      //   min: 0
+      // }
     }
-    
-     data = new google.visualization.arrayToDataTable(fiveSOISdata);
-     chart.draw(data, options);
+    else if(chartState == "curve"){
+      fiveSOISdata.push(["ID", "Year", "Enrollment", "Size"]);
+      for(var i = 1; i < SOISdata.length; i++){
+        var d = SOISdata[i];
+        fiveSOISdata.push([
+          d[0].slice(0,4), totalEnrollment, d[2], d[3], d[4]*d[4]
+        ]);
+      }
+    }
+
+
+    data = new google.visualization.arrayToDataTable(fiveSOISdata);
+    chart.draw(data, options);
   }
   
   function filterByTen(){
