@@ -6,15 +6,15 @@
 
 (function(){
  	"use strict";
- 	
- google.charts.load('current', {'packages':['corechart']});
-  google.charts.setOnLoadCallback(drawSeriesChart);
+ 
+  google.charts.load('current', {'packages':['corechart']});
+  google.charts.setOnLoadCallback(init);
 
-  var data, options, chart, parabolaBtn;
+  var data, options, chart, parabolaBtn, chartState;
 
-  function drawSeriesChart() {
-    
-    document.querySelector('#allRadio').onchange = function(e){
+  function init(){
+	 //Radio buttons!
+	document.querySelector('#allRadio').onchange = function(e){
   		drawSeriesChart();
   	}
   	document.querySelector('#fiveRadio').onchange = function(e){
@@ -23,14 +23,22 @@
   	document.querySelector('#tenRadio').onchange = function(e){
   		filterByTen();
   	}
-
   	
-    parabolaBtn = document.getElementById('parabolaBtn');
+  	
+  	parabolaBtn = document.getElementById('parabolaBtn');
     parabolaBtn.onclick = function(){
       drawParabolaChart();
     };
 
-    var weightedSOISdata = [
+	chartState = "series";
+	chart = new google.visualization.BubbleChart(document.getElementById('series_chart_div'));
+    	
+	drawSeriesChart();
+	  
+  }
+
+  function drawSeriesChart() {
+   var weightedSOISdata = [
       ["ID", "Date", "", "", "Enrollment"],
     ];
     var totalEnrollment = 0.0;
@@ -45,9 +53,8 @@
 
     data = new google.visualization.arrayToDataTable(weightedSOISdata);
 
-    // Opaque until on hover ?
 
-    options = {
+   options = {
       title: 'RIT School of Individualized Studies Enrollment from 1885-2017',
       hAxis: {
         title: '', 
@@ -79,8 +86,7 @@
       },
       tooltip: {trigger: 'none'}
     };
-
-    chart = new google.visualization.BubbleChart(document.getElementById('series_chart_div'));
+   
     chart.draw(data, options);
   }
   
@@ -159,5 +165,5 @@
      chart.draw(data, options);
   }
   
-  window.addEventListener("load", drawSeriesChart);
+  window.addEventListener("load", init);
 }());
