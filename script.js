@@ -8,13 +8,14 @@
  	"use strict";
  	var byFive = false;
  	
- 	google.charts.load('current', {'packages':['corechart']});
+ google.charts.load('current', {'packages':['corechart']});
   google.charts.setOnLoadCallback(drawSeriesChart);
 
   function drawSeriesChart() {
     
   	document.querySelector('#fiveCheckbox').onchange = function(e){
   		byFive = e.target.checked;
+  		filterByFive();
   	}
   	console.log(byFive);
 
@@ -75,14 +76,6 @@
 
     var chart = new google.visualization.BubbleChart(document.getElementById('series_chart_div'));
     chart.draw(data, options);
-    update();
-  }
-  
-  function update(){
-	  //requestAnimationFrame(update);
-	  if(byFive){
-	  byFive();
-	  }
   }
   
   function drawParabolaChart(){
@@ -148,7 +141,7 @@
     chart.draw(data, options);
   }
   
-  function byFive(){
+  function filterByFive(){
 	var fiveSOISdata = [
       ["ID", "Date", "", "", "Enrollment"],
     ];
@@ -156,7 +149,7 @@
     for(var i = 1; i < SOISdata.length; i =i+ 10){
       var d = SOISdata[i];
       totalEnrollment += d[3]/2.08;
-      weightedSOISdata.push([
+      fiveSOISdata.push([
         d[0].slice(0,4), totalEnrollment, d[2], d[3], d[4]*d[4]
       ]);
       totalEnrollment += d[3]/2.08;
