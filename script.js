@@ -84,10 +84,10 @@
     // Disabling the button while the chart is drawing.
     parabolaBtn.disabled = true;
     google.visualization.events.addListener(chart, 'ready',
-        function() {
-          parabolaBtn.disabled = false;
-        });
-
+      function() {
+        parabolaBtn.disabled = false;
+      });
+    
     var parabolaSOISdata = [
       ["ID", "Year", "Enrollment", "Size"]
     ];
@@ -98,44 +98,23 @@
       ]);
     }
 
-    options = {
-      title: 'RIT School of Individualized Studies Enrollment from 1885-2017',
-      hAxis: {
-        title: '', 
-        format: '', 
-        gridlines: {count: 5},
-        minorGridlines: {count:9},
-        viewWindowMode:'explicit',
-        viewWindow:{
-          max:1930,
-          min:1880
-        }
-      },
-      vAxis: {
-        title: '',
-        format: '',
-        gridlines: {count: 10},
-        viewWindowMode:'explicit',
-        viewWindow:{
-          max:8000,
-          min:0
-        }
-      },
-      bubble: {textStyle: {fontSize: 11}},
-      colorAxis: {colors:['#FFFF00','#FF0000']},
-      sizeAxis: {minValue: 0, maxSize: 5},
-      tooltip: {trigger: 'none'},
-      explorer:{
-        axis: 'horizontal',
-        maxZoomIn: 1,
-        maxZoomOut: 4,
-        zoomDelta: 1.1
-      },
-      animation:{
-        duration: 1000,
-        easing: 'out',
-      },
+    data = new google.visualization.arrayToDataTable(parabolaSOISdata);
+
+    options.hAxis.gridlines = 14;
+    options.hAxis.minorGridlines = 9;
+    options.hAxis.viewWindow = {
+      max: 2020,
+      min: 1880
+    }
+    options.vAxis.gridlines = 9;
+    options.vAxis.viewWindow = {
+      max:9000,
+      min:0
     };
+    options.sizeAxis.maxSize = 5;
+    options.explorer.maxZoomIn = .1
+    options.explorer.maxZoomOut = 1;
+    options.explorer.zoomDelta = 1.1;
 
     chart.draw(data, options);
   }
