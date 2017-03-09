@@ -10,12 +10,12 @@
   google.charts.load('current', {'packages':['corechart']});
   google.charts.setOnLoadCallback(init);
 
-  var data, options, chart, curveBtn, chartState, timelineBnt;
+  var data, options, chart, curveBtn, chartState, timelineBtn, waterfallBtn;
 
 
   function init(){
 	 //Radio buttons!
-	document.querySelector('#allRadio').onchange = function(e){
+	  document.querySelector('#allRadio').onchange = function(e){
   		drawSeriesChart();
   	}
   	document.querySelector('#fiveRadio').onchange = function(e){
@@ -30,11 +30,14 @@
     curveBtn.onclick = function(){
       drawCurveChart();
     };
-    timelineBnt = document.getElementById('timelineBtn');
+    timelineBtn = document.getElementById('timelineBtn');
     timelineBtn.onclick = function(){
       drawSeriesChart();
     };
-
+    waterfallBtn = document.getElementById('waterfallBtn');
+    waterfallBtn.onclick = function(){
+      drawWaterfallChart();
+    };
 
   	chartState = "series";
   	chart = new google.visualization.BubbleChart(document.getElementById('series_chart_div'));
@@ -230,22 +233,70 @@
       options.vAxis.gridlines = {count: 6}
       options.sizeAxis.maxSize = 13;
     }
-
-	  	// var fiveSOISdata = [
-    //   ["ID", "Date", "", "", "Enrollment"],
-    // ];
-    // var totalEnrollment = 0.0;
-    // for(var i = 6; i < SOISdata.length; i =i+ 10){
-    //   var d = SOISdata[i];
-    //   totalEnrollment += d[3]/2.08;
-    //   fiveSOISdata.push([
-    //     d[0].slice(0,4), totalEnrollment, d[2], d[3], d[4]*d[4]
-    //   ]);
-    //   totalEnrollment += d[3]/2.08;
-    // }
     
-     data = new google.visualization.arrayToDataTable(tenSOISdata);
-     chart.draw(data, options);
+    data = new google.visualization.arrayToDataTable(tenSOISdata);
+    chart.draw(data, options);
+  }
+
+  function drawWaterfallChart(){
+    chartState = "waterfall";
+    var wchart = new google.visualization.CandlestickChart(document.getElementById('series_chart_div'));
+    // Disabling the button while the chart is drawing.
+    waterfallBtn.disabled = true;
+    google.visualization.events.addListener(chart, 'ready',
+      function() {
+        waterfallBtn.disabled = false;
+      });
+    
+    var waterfallSOISdata = [];
+    for(var i = 2; i < SOISdata.length; i++){
+      var d = SOISdata[i];
+      //console.log("[" + d[0].slice(0,4) +", "+ SOISdata[i-1][3] +", "+ SOISdata[i-1][3]+", "+ d[3]+", "+ d[3] +"]");
+      waterfallSOISdata.push([
+        d[0].slice(0,4), SOISdata[i-1][3], SOISdata[i-1][3], d[3], d[3]
+      ]);
+    }
+
+    var wdata = new google.visualization.arrayToDataTable(waterfallSOISdata, true);
+
+    var woptions = {
+      title: 'RIT School of Individualized Studies Enrollment from 1885-2017',
+      hAxis: {
+        title: '', 
+        format: '', 
+        gridlines: {count: 10},
+        viewWindowMode:'explicit',
+      },
+      vAxis: {
+        title: '',
+        format: '',
+        gridlines: {count: 6},
+        viewWindowMode:'explicit',
+        viewWindow:{
+          max:9000,
+          min:0
+        }
+      },
+      colorAxis: {colors:['#FFFF00','#FF0000']},
+      sizeAxis: {minValue: 0, maxSize: 100},
+      explorer:{
+        axis: 'horizontal',
+        maxZoomIn: 1,
+        maxZoomOut: 8,
+        zoomDelta: 1.1
+      },
+      animation:{
+        duration: 1000,
+        easing: 'out',
+      },
+      candlestick: {
+        fallingColor: { strokeWidth: 0, fill: '#a52714' }, // red
+        risingColor: { strokeWidth: 0, fill: '#0f9d58' }   // green
+      },
+      bar: { groupWidth: '100%' }
+    };
+
+    wchart.draw(wdata, woptions);
   }
   
   window.addEventListener("load", init);
