@@ -189,15 +189,15 @@
     var wdata = new google.visualization.arrayToDataTable(waterfallSOISdata, true);
 
     woptions = {
-      title: 'RIT School of Individualized Studies Enrollment from 1885-2016',
+      title: '',
       hAxis: {
-        title: '', 
+        title: 'Year', 
         format: '', 
         gridlines: {count: 9},
         viewWindowMode:'explicit',
       },
       vAxis: {
-        title: '',
+        title: 'Enrollment Number',
         format: '',
         gridlines: {count: 9},
         viewWindowMode:'explicit',
@@ -284,7 +284,7 @@
         fives += d[3]
         if((i-1) % 5 == 0 && i != 1){
           fiveSOISdata.push([
-            SOISdata[i-5][0].slice(0,4) + "s", fivesHistory, fivesHistory, fives, fives
+            SOISdata[i-5][0].slice(0,4), fivesHistory, fivesHistory, fives, fives
           ]);
           fivesHistory = fives;
           fives = 0;
