@@ -8,8 +8,10 @@ html,body,div,h1,h2,h3,h4,h5,h6,ul,li,p
 {		margin:0; padding:0;}
 
 /*+++++BODY+++++*/
-body{  width: 100%; margin: 0px; font-size: 1.2em; background-color: lightgrey;}
+body{  width: 100%; margin: 0px; font-size: 1.2em; background-color: #f7f7f7; font-family: 'Playfair Display', serif; letter-spacing: 1px}
 
+.top {height: 8px; width: 100%; background-color:rgba(69, 116, 132, 1); }
+h1 { font-size: 1.5em; text-align: center; padding: 10px 5px 5px 5px;}
 
 /*+++++UTILITY+++++*/
 .clear{	clear:both;}
@@ -28,7 +30,44 @@ abbr {		border-bottom: 1px dotted #535353; cursor:help; font-style:italic;}
 .boxes ul li {list-style-type: none; display: inline-block; margin: 0 25px;}
 
 .bttn { text-align: center; margin: 0 auto; }
-button {	background-color: rgb(89, 155, 179); border-radius: 28px; border: 1px solid rgb(41, 102, 143); display: inline-block; cursor: pointer; color: rgb(255, 255, 255); font-family: Arial; font-size: 17px; padding: 10px 20px; text-decoration: none; text-shadow: rgb(61, 118, 138) 0px 1px 0px; margin: 0 20px; outline: none; }
+button {	background-color: rgba(105, 145, 160, 1); border-radius: 7px; border: 1px solid rgba(116, 145, 164, 1); display: inline-block; cursor: pointer; color: rgb(255, 255, 255); font-family: 'Playfair Display', serif; letter-spacing: 1px;font-size: 17px; padding: 10px 12px; text-decoration: none; text-shadow: rgba(115, 175, 196, 1) 0px 1px 0px; margin: 0 20px; outline: none; }
+
+button.active {background-color: rgba(69, 116, 132, 1); border-radius: 7px; border: 1px solid rgba(116, 145, 164, 1); display: inline-block; cursor: pointer; color: rgb(255, 255, 255); font-family: 'Playfair Display', serif; letter-spacing: 1px;font-size: 17px; padding: 10px 12px; text-decoration: none; text-shadow: rgba(115, 175, 196, 1) 0px 1px 0px; margin: 0 20px; outline: none; }
+
+input[type='radio'] {
+  -webkit-appearance:none;
+  width:20px;
+  height:20px;
+  border:1px solid darkgray;
+  border-radius:50%;
+  outline:none;
+  box-shadow:0 0 5px 0px gray inset;
+  transform: scale(1.1);
+  margin-right: 10px;
+}
+
+input[type='radio']:hover {
+  box-shadow:0 0 5px 0px teal inset;
+}
+
+input[type='radio']:before {
+  content:'';
+  display:block;
+  width:60%;
+  height:60%;
+  margin: 20% auto;    
+  border-radius:50%;    
+}
+input[type='radio']:checked:before {
+  background-color: rgba(69, 116, 132, 1);
+}
+
+.boxes ul li label { 
+	
+	top: -5px;
+    position: relative;
+	
+}
 
 
 #series_chart_div {		width: 900px; height: 500px; margin: 0 auto;}

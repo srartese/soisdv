@@ -4,12 +4,15 @@
 	<meta charset="utf-8" />
 	<title>SOIS DV</title>
 	<link rel="stylesheet" type="text/css" href="css/global.css">
+	<link href="https://fonts.googleapis.com/css?family=Playfair+Display" rel="stylesheet">
 	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script type="text/javascript" src="script.js"></script>
     <script type="text/javascript" src="SIOSdata.js"></script>
   </head>
   <body>
+	  <div class="top"> </div>
+	  <h1> RIT School of Individualized Studies Enrollment from 1885-2017 </h1>
     <div id="series_chart_div"></div>
     <div id="waterfall_chart_div"></div>
 
@@ -22,9 +25,9 @@
 		</ul>
 	</div>
 	<div class="bttn">
-		<button id="timelineBtn">Timeline</button>
-   		<button id="curveBtn">Curve</button>
-   		<button id="waterfallBtn">Waterfall</button>
+		<button id="timelineBtn" class="active"><label>Timeline</label></button>
+   		<button id="curveBtn"><label>Curve</label></button>
+   		<button id="waterfallBtn"><label>Waterfall</label></button>
 	</div>
   </body>
 </html>

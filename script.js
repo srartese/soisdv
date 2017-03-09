@@ -1,6 +1,6 @@
 /* SOIS Data Visualization using Google Charts
 	By Matthew Graham and Sara Artese
-	Last Updated: March 5, 2017
+	Last Updated: March 8, 2017
 */
 
 
@@ -12,10 +12,9 @@
 
   var data, options, chart, curveBtn, chartState, timelineBtn, waterfallBtn;
 
-
   function init(){
 	 //Radio buttons!
-	  document.querySelector('#allRadio').onchange = function(e){
+	document.querySelector('#allRadio').onchange = function(e){
   		drawSeriesChart();
   	}
   	document.querySelector('#fiveRadio').onchange = function(e){
@@ -25,25 +24,36 @@
   		filterByTen();
   	}
   	
-  	
   	curveBtn = document.getElementById('curveBtn');
     curveBtn.onclick = function(){
+	 checkActive(curveBtn);
       drawCurveChart();
     };
     timelineBtn = document.getElementById('timelineBtn');
     timelineBtn.onclick = function(){
+	  checkActive(timelineBtn);
       drawSeriesChart();
     };
     waterfallBtn = document.getElementById('waterfallBtn');
     waterfallBtn.onclick = function(){
+	  checkActive(waterfallBtn);
       drawWaterfallChart();
     };
+    
 
   	chartState = "series";
   	chart = new google.visualization.BubbleChart(document.getElementById('series_chart_div'));
-      	
   	drawSeriesChart();
 	  
+  }
+  
+  function checkActive(type){
+	  var typeBtn = type;
+	  var button = document.getElementsByTagName('button');
+	  if($(button).hasClass('active')){
+		 $(button).removeClass('active'); 
+	  }
+	  $(typeBtn).addClass('active');
   }
 
   function drawSeriesChart() {
@@ -65,7 +75,8 @@
 
 
    options = {
-      title: 'RIT School of Individualized Studies Enrollment from 1885-2017',
+      title: '',
+      titlePosition: 'none',
       hAxis: {
         title: '', 
         format: '', 
@@ -124,12 +135,16 @@
 
     data = new google.visualization.arrayToDataTable(curveSOISdata);
     
+    options.title = '';
+    options.titlePosition = 'none';
+    options.hAxis.title = 'Year';
     options.hAxis.gridlines = 14;
     options.hAxis.minorGridlines = 9;
     options.hAxis.viewWindow = {
       max: 2020,
       min: 1880
     }
+    options.vAxis.title = 'Enrollment Number';
     options.vAxis.gridlines = 9;
     options.vAxis.viewWindow = {
       max:9000,
@@ -185,7 +200,7 @@
       options.vAxis.viewWindow.max = 38000;
       options.sizeAxis.maxSize = 6;
     }
-
+	 
     data = new google.visualization.arrayToDataTable(fiveSOISdata);
     chart.draw(data, options);
   }
@@ -260,15 +275,16 @@
     var wdata = new google.visualization.arrayToDataTable(waterfallSOISdata, true);
 
     var woptions = {
-      title: 'RIT School of Individualized Studies Enrollment from 1885-2017',
+      title: '',
+      titlePosition: 'none',
       hAxis: {
-        title: '', 
+        title: 'Year', 
         format: '', 
         gridlines: {count: 10},
         viewWindowMode:'explicit',
       },
       vAxis: {
-        title: '',
+        title: 'Enrollment Number',
         format: '',
         gridlines: {count: 6},
         viewWindowMode:'explicit',
