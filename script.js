@@ -10,12 +10,12 @@
   google.charts.load('current', {'packages':['corechart']});
   google.charts.setOnLoadCallback(init);
 
-  var data, options, chart, curveBtn, chartState, timelineBtn, waterfallBtn;
+  var data, woptions, options, wchart, chart, curveBtn, chartState, filterState, timelineBtn, waterfallBtn;
 
   function init(){
 	 //Radio buttons!
-	document.querySelector('#allRadio').onchange = function(e){
-  		drawSeriesChart();
+	  document.querySelector('#allRadio').onchange = function(e){
+  		filterByAll();
   	}
   	document.querySelector('#fiveRadio').onchange = function(e){
   		filterByFive();
@@ -26,22 +26,23 @@
   	
   	curveBtn = document.getElementById('curveBtn');
     curveBtn.onclick = function(){
-	 checkActive(curveBtn);
+	    checkActive(curveBtn);
       drawCurveChart();
     };
     timelineBtn = document.getElementById('timelineBtn');
     timelineBtn.onclick = function(){
-	  checkActive(timelineBtn);
+	    checkActive(timelineBtn);
       drawSeriesChart();
     };
     waterfallBtn = document.getElementById('waterfallBtn');
     waterfallBtn.onclick = function(){
-	  checkActive(waterfallBtn);
+	    checkActive(waterfallBtn);
       drawWaterfallChart();
     };
     
 
   	chartState = "series";
+    filterState = "all";
   	chart = new google.visualization.BubbleChart(document.getElementById('series_chart_div'));
   	drawSeriesChart();
 	  
@@ -57,6 +58,9 @@
   }
 
   function drawSeriesChart() {
+    if(chartState == "waterfall"){
+      chart = new google.visualization.BubbleChart(document.getElementById('series_chart_div'));
+    }
     chartState = "series";
     var weightedSOISdata = [
       ["ID", "Date", "", "", "Enrollment"],
@@ -72,7 +76,6 @@
     }
 
     data = new google.visualization.arrayToDataTable(weightedSOISdata);
-
 
    options = {
       title: '',
@@ -91,8 +94,7 @@
       vAxis: {
         title: '',
         format: '',
-        gridlines: {count: 0, color: 'black'},
-        baselineColor: 'black'
+        gridlines: {count: 0},
       },
       bubble: {textStyle: {fontSize: 11}},
       colorAxis: {colors:['#FFFF00','#FF0000']},
@@ -105,23 +107,26 @@
         keepInBounds: false
       },
       animation:{
-        duration: 1000,
+        duration: 500,
         easing: 'out',
       },
       tooltip: {trigger: 'none'}
     };
    
-    chart.draw(data, options);
+    if(filterState == "five"){
+      filterByFive();
+    } else if(filterState == "ten"){
+      filterByTen();
+    } else{
+      chart.draw(data, options);
+    }
   }
   
   function drawCurveChart(){
+    if(chartState == "waterfall"){
+      chart = new google.visualization.BubbleChart(document.getElementById('series_chart_div'));
+    }
     chartState = "curve";
-    // Disabling the button while the chart is drawing.
-    curveBtn.disabled = true;
-    google.visualization.events.addListener(chart, 'ready',
-      function() {
-        curveBtn.disabled = false;
-      });
     
     var curveSOISdata = [
       ["ID", "Year", "Enrollment", "Size"]
@@ -138,28 +143,100 @@
     options.title = '';
     options.titlePosition = 'none';
     options.hAxis.title = 'Year';
-    options.hAxis.gridlines = 14;
-    options.hAxis.minorGridlines = 9;
+    options.hAxis.gridlines.count = 9;
     options.hAxis.viewWindow = {
       max: 2020,
       min: 1880
     }
     options.vAxis.title = 'Enrollment Number';
-    options.vAxis.gridlines = 9;
+    options.hAxis.viewWindowMode = "explicit";
+    options.vAxis.gridlines.count = 9;
     options.vAxis.viewWindow = {
       max:9000,
       min:0
     };
+    options.vAxis.viewWindowMode = "explicit";
     options.sizeAxis.maxSize = 5;
+    options.explorer.axis = "horizontal";
     options.explorer.maxZoomIn = .1;
     options.explorer.maxZoomOut = 1;
     options.explorer.zoomDelta = 1.1;
     options.tooltip.trigger = 'hover';
 
-    chart.draw(data, options);
+    if(filterState == "five"){
+      filterByFive();
+    } else if(filterState == "ten"){
+      filterByTen();
+    } else{
+      chart.draw(data, options);
+    }
   }
   
+  function drawWaterfallChart(){
+    if(chartState != "waterfall"){
+      wchart = new google.visualization.CandlestickChart(document.getElementById('series_chart_div'));
+    }
+      
+    var waterfallSOISdata = [];
+    for(var i = 2; i < SOISdata.length; i++){
+      var d = SOISdata[i];
+      //console.log("[" + d[0].slice(0,4) +", "+ SOISdata[i-1][3] +", "+ SOISdata[i-1][3]+", "+ d[3]+", "+ d[3] +"]");
+      waterfallSOISdata.push([
+        d[0].slice(0,4), SOISdata[i-1][3], SOISdata[i-1][3], d[3], d[3]
+      ]);
+    }
+
+    var wdata = new google.visualization.arrayToDataTable(waterfallSOISdata, true);
+
+    woptions = {
+      title: 'RIT School of Individualized Studies Enrollment from 1885-2016',
+      hAxis: {
+        title: '', 
+        format: '', 
+        gridlines: {count: 9},
+        viewWindowMode:'explicit',
+      },
+      vAxis: {
+        title: '',
+        format: '',
+        gridlines: {count: 9},
+        viewWindowMode:'explicit',
+        viewWindow:{
+          max:9000,
+          min:0
+        },
+      },
+      animation:{duration:200, startup:false},
+      sizeAxis: {minValue: 0, maxSize: 5},
+      explorer:{
+        axis: 'horizontal',
+        maxZoomIn: 1,
+        maxZoomOut: 8,
+        zoomDelta: 1.1
+      },
+      candlestick: {
+        fallingColor: { strokeWidth: 0, fill: '#FF0000' }, // red
+        risingColor: { strokeWidth: 0, fill: '#0f9d58' }   // green
+      },
+      bar: { groupWidth: '100%' },
+      legend: 'none',
+    };
+    if(chartState == "series"){
+      woptions.animation.startup = true;
+    }
+    chartState = "waterfall";
+
+    if(filterState == "five"){
+      filterByFive();
+    } else if(filterState == "ten"){
+      filterByTen();
+    } else{
+      wchart.draw(wdata, woptions);
+    }
+  }
+
   function filterByFive(){
+    filterState = "five";
     var fiveSOISdata = [];
     if(chartState == "series"){
       fiveSOISdata.push(["ID", "Date", "", "", "Enrollment"]);
@@ -199,14 +276,47 @@
 	  
       options.vAxis.viewWindow.max = 38000;
       options.sizeAxis.maxSize = 6;
+    } else if(chartState == "waterfall"){
+      var fivesHistory = SOISdata[1][3];
+      var fives = 0;
+      for(var i = 1; i < SOISdata.length; i++){
+        var d = SOISdata[i];
+        fives += d[3]
+        if((i-1) % 5 == 0 && i != 1){
+          fiveSOISdata.push([
+            SOISdata[i-5][0].slice(0,4) + "s", fivesHistory, fivesHistory, fives, fives
+          ]);
+          fivesHistory = fives;
+          fives = 0;
+        }
+
+      } 
+      woptions.vAxis.viewWindow.max = 38000;
+      woptions.vAxis.gridlines = {count: 6}
     }
-	 
-    data = new google.visualization.arrayToDataTable(fiveSOISdata);
-    chart.draw(data, options);
+
+    if(chartState == "waterfall"){
+      data = new google.visualization.arrayToDataTable(fiveSOISdata, true);
+      wchart.draw(data, woptions);
+    } else{
+      data = new google.visualization.arrayToDataTable(fiveSOISdata);
+      chart.draw(data, options);
+    }
+  }
+
+  function filterByAll(){
+    filterState = "all";
+    if(chartState == "series"){
+      drawSeriesChart();
+    } else if(chartState == "curve"){
+      drawCurveChart();
+    } else if(chartState == "waterfall"){
+      drawWaterfallChart();
+    }
   }
   
   function filterByTen(){
-
+    filterState = "ten";
     var tenSOISdata = [];
     if(chartState == "series"){
       tenSOISdata.push(["ID", "Date", "", "", "Enrollment"]);
@@ -220,7 +330,7 @@
         tensEnrollment += d[3];
         if((i-6) % 10 == 0 && i != 6){
           tenSOISdata.push([
-            SOISdata[i-10][0].slice(0,4), (totalEnrollment+(tensEnrollment/2.08)), 0, tensEnrollment, tens
+            SOISdata[i-10][0].slice(0,4) + "s", (totalEnrollment+(tensEnrollment/2.08)), 0, tensEnrollment, tens
           ]);
           tens = 0;
           totalEnrollment += tensEnrollment;
@@ -238,82 +348,41 @@
         tens += d[3]
         if((i-6) % 10 == 0 && i != 6){
           tenSOISdata.push([
-            SOISdata[i-10][0].slice(0,4), SOISdata[i-10][1], tens, tens
+            SOISdata[i-10][0].slice(0,4) + "s", SOISdata[i-10][1], tens, tens
           ]);
           tens = 0;
         }
-      }
-
+      } 
       options.vAxis.viewWindow.max = 70000;
       options.vAxis.gridlines = {count: 6}
       options.sizeAxis.maxSize = 13;
-    }
-    
-    data = new google.visualization.arrayToDataTable(tenSOISdata);
-    chart.draw(data, options);
-  }
-
-  function drawWaterfallChart(){
-    chartState = "waterfall";
-    var wchart = new google.visualization.CandlestickChart(document.getElementById('series_chart_div'));
-    // Disabling the button while the chart is drawing.
-    waterfallBtn.disabled = true;
-    google.visualization.events.addListener(chart, 'ready',
-      function() {
-        waterfallBtn.disabled = false;
-      });
-    
-    var waterfallSOISdata = [];
-    for(var i = 2; i < SOISdata.length; i++){
-      var d = SOISdata[i];
-      //console.log("[" + d[0].slice(0,4) +", "+ SOISdata[i-1][3] +", "+ SOISdata[i-1][3]+", "+ d[3]+", "+ d[3] +"]");
-      waterfallSOISdata.push([
-        d[0].slice(0,4), SOISdata[i-1][3], SOISdata[i-1][3], d[3], d[3]
-      ]);
-    }
-
-    var wdata = new google.visualization.arrayToDataTable(waterfallSOISdata, true);
-
-    var woptions = {
-      title: '',
-      titlePosition: 'none',
-      hAxis: {
-        title: 'Year', 
-        format: '', 
-        gridlines: {count: 10},
-        viewWindowMode:'explicit',
-      },
-      vAxis: {
-        title: 'Enrollment Number',
-        format: '',
-        gridlines: {count: 6},
-        viewWindowMode:'explicit',
-        viewWindow:{
-          max:9000,
-          min:0
+    } else if(chartState == "waterfall"){
+      var tensHistory = SOISdata[1][3];
+      var tens = 0;
+      for(var i = 1; i < SOISdata.length; i++){
+        var d = SOISdata[i];
+        tens += d[3]
+        if((i-6) % 10 == 0 && i != 6){
+          tenSOISdata.push([
+            SOISdata[i-10][0].slice(0,4) + "s", tensHistory, tensHistory, tens, tens
+          ]);
+          tensHistory = tens;
+          tens = 0;
         }
-      },
-      colorAxis: {colors:['#FFFF00','#FF0000']},
-      sizeAxis: {minValue: 0, maxSize: 100},
-      explorer:{
-        axis: 'horizontal',
-        maxZoomIn: 1,
-        maxZoomOut: 8,
-        zoomDelta: 1.1
-      },
-      animation:{
-        duration: 1000,
-        easing: 'out',
-      },
-      candlestick: {
-        fallingColor: { strokeWidth: 0, fill: '#a52714' }, // red
-        risingColor: { strokeWidth: 0, fill: '#0f9d58' }   // green
-      },
-      bar: { groupWidth: '100%' }
-    };
 
-    wchart.draw(wdata, woptions);
+      } 
+      woptions.vAxis.viewWindow.max = 70000;
+      woptions.vAxis.gridlines = {count: 6}
+    }
+    if(chartState == "waterfall"){
+      console.log("in")
+      data = new google.visualization.arrayToDataTable(tenSOISdata, true);
+      wchart.draw(data, woptions);
+    } else{
+      data = new google.visualization.arrayToDataTable(tenSOISdata);
+      chart.draw(data, options);
+    }
   }
-  
+
   window.addEventListener("load", init);
 }());
