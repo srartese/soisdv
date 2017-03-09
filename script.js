@@ -66,17 +66,19 @@
       hAxis: {
         title: '', 
         format: '', 
-        gridlines: {count: 0},
+        gridlines: {count: 0, color: 'none'},
         viewWindowMode:'explicit',
         viewWindow:{
           max:21000,
           min:0
-        }
+        },
+        baselineColor: 'none'
       },
       vAxis: {
         title: '',
         format: '',
-        gridlines: {count: 0},
+        gridlines: {count: 0, color: 'black'},
+        baselineColor: 'black'
       },
       bubble: {textStyle: {fontSize: 11}},
       colorAxis: {colors:['#FFFF00','#FF0000']},
@@ -85,7 +87,8 @@
         axis: 'horizontal',
         maxZoomIn: 1,
         maxZoomOut: 8,
-        zoomDelta: 1.1
+        zoomDelta: 1.1,
+        keepInBounds: false
       },
       animation:{
         duration: 1000,
@@ -117,7 +120,7 @@
     }
 
     data = new google.visualization.arrayToDataTable(curveSOISdata);
-
+    
     options.hAxis.gridlines = 14;
     options.hAxis.minorGridlines = 9;
     options.hAxis.viewWindow = {
@@ -175,7 +178,7 @@
           fives = 0
         }
       }
-
+	  
       options.vAxis.viewWindow.max = 38000;
       options.sizeAxis.maxSize = 6;
     }
